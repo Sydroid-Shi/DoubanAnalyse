@@ -46,6 +46,23 @@ public class AnalyseUtil {
 		return urlContent;
 	}
 	
+	public static String[] splitHTMLtoArticles(String htmlStr) {
+
+		String start = "<table class";//<tbody> cannot be used for split
+		String end = "</table>";//</tbody cannot be used.
+		String splitStr = "</tr>";
+		String[] articles;
+		try {
+			htmlStr = htmlStr.substring(htmlStr.indexOf(start)+7, htmlStr.lastIndexOf(end));
+			//AnalyseUtil.print("content after substring: \n" + content);
+			articles = htmlStr.trim().split(splitStr);
+		}catch(Exception e) {
+			AnalyseUtil.print("Exception happens in splitHTMLtoArticles: \n" + e);
+			return null;
+		}
+		return articles;
+	}
+	
 	/**
 	 * To parse and get the page count for the Group Search URL.
 	 * @param htmlStr The HTML result from: "https://www.douban.com/group/search?start=0&cat=1019&sort=relevance&q=¹ãÖÝ×â·¿"
@@ -112,4 +129,13 @@ public class AnalyseUtil {
 	}
 	
 
+	public static boolean isBetweenPeriod(String currentDay, String preStartDay, String endDay) {
+		if(preStartDay == null || endDay == null) {
+			return false;
+		}
+		if(currentDay.compareTo(preStartDay) > 1 && currentDay.compareTo(endDay) <= 0) {
+			return true;
+		}
+		return false;
+	}
 }

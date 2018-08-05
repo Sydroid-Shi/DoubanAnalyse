@@ -127,14 +127,9 @@ public class HTMLReader {
 
 	private void parseToList(String content) {
 
-		String start = "<table class";//<tbody> cannot be used for split
-		String end = "</table>";//</tbody cannot be used.
-		String splitStr = "</tr>";
 		String[] articles;
 		try {
-			content = content.substring(content.indexOf(start)+7, content.lastIndexOf(end));
-			//AnalyseUtil.print("content after substring: \n" + content);
-			articles = content.trim().split(splitStr);
+			articles = AnalyseUtil.splitHTMLtoArticles(content);
 			
 			for(String article : articles) {
 				AnalyseUtil.print("Split article: " + article);
