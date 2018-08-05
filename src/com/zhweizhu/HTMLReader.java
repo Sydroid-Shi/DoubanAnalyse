@@ -38,7 +38,7 @@ public class HTMLReader {
 	
 	public static int PAGE_INDEX_INCERASEMENT = 25;
 	
-	public static String CURRENT_DATE = "07-30";//you can modify the date here to get all the new added houses this day.
+	public static String CURRENT_DATE = "08-04";//you can modify the date here to get all the new added houses this day.
 	
 	
 	private String currentGroup;

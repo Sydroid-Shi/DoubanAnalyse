@@ -7,6 +7,9 @@ public class DoubanAnalyseMain {
 
 		HTMLReader reader = new HTMLReader();
 		reader.init();
+		
+		GroupSearchReader gsReader = new GroupSearchReader();
+		//gsReader.run();
 	}
 
 }
