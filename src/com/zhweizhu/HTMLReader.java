@@ -38,8 +38,14 @@ public class HTMLReader {
 	
 	public static int PAGE_INDEX_INCERASEMENT = 25;
 	
-	public static String CURRENT_DATE = "08-04";//you can modify the date here to get all the new added houses this day.
+	//If you need get yesterday, should use the day after yesterday for judgement
+	public static String THE_DAY_AFTER_YESTERDAY = "08-10";//you can modify the date here to get all the new added houses this day.
+	public static String YESTERDAY = "08-11";
 	
+	public static String STOP_DAY = "08-10";
+	
+	public static String DAY_FROM_PRE = "8-10";
+	public static String DAY_TO = "8-18";
 	
 	private String currentGroup;
 	boolean isContinue = true;
@@ -71,6 +77,15 @@ public class HTMLReader {
 		houseGroupLinks.add(LINK_COMMON_PREP + "555279" + LINK_COMMON_END);// 被屏蔽
 
 		return houseGroupLinks;
+	}
+	
+	private List<String> excludeUsers(){
+		List<String> excludeUsers = new ArrayList<String>();
+		excludeUsers.add("sd8d78s");
+		excludeUsers.add("阿利狼");
+		excludeUsers.add("陈陈陈啊");
+		excludeUsers.add("A     ");
+		return excludeUsers;
 	}
 
 	//For loop the group link list to get messages from each group and fill to the group house list
@@ -171,7 +186,10 @@ public class HTMLReader {
 			replyNum = articleSplit[2].substring(articleSplit[2].lastIndexOf("\">")+2);
 			lastUpdateTime = articleSplit[3].substring(articleSplit[3].lastIndexOf("\">"));
 			
-			isContinue(lastUpdateTime);
+			if(isContinue) {//if it is true, should be verified. If false, means it needs to be turned out, not need to verified again.
+				isContinue(lastUpdateTime);//TODO return the value in order to stop the process if the date meets.
+			}
+				
 			
 			house.setAuthorName(authorName);
 			house.setRequirementLink(requirementLink);
@@ -184,18 +202,32 @@ public class HTMLReader {
 	}
 	
 	private void isContinue(String str) {
-		isContinue = compareToToday(str);
+		isContinue = compareToTheDate2(str, DAY_FROM_PRE);//if meets the date, stop. To get the results before the date.
 	}
 	
-	private boolean compareToToday(String str) {
+	/**
+	 * 
+	 * @param str
+	 * @return true means it is the date, false means after the date, there is no before the date.
+	 */
+	private boolean compareToTheDate(String str, String judgeDate) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
-		String currentDate = sdf.format(date);
-		currentDate = CURRENT_DATE;
-		if(!str.contains(currentDate)) {
-			return false;
+		if(judgeDate == null) judgeDate = sdf.format(date);//use today as judge day
+		if(str.contains(judgeDate)) {
+			return true;
 		}
-		return true;
+		return false;
+	}
+
+	private boolean compareToTheDate2(String str, String judgeDate) {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
+		if(judgeDate == null) judgeDate = sdf.format(date);//use today as judge day
+		if(str.compareTo(judgeDate) > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	//filter the articles in one group
@@ -300,15 +332,23 @@ public class HTMLReader {
 		try {
 
 			List<HouseRequirement> groupTempRemove = new ArrayList<HouseRequirement>();
+			List<String> excludeUsers = excludeUsers();
 			for(HouseRequirement house : groupFinal) {
 				String content = AnalyseUtil.getURLContent(house.getRequirementLink());
 				content = content.substring(content.indexOf("display:inline-block"), content.indexOf("link-report"));
 				String date = content.substring(content.indexOf(">")+1, content.indexOf("</span>"));
 				AnalyseUtil.print("The publish date for this article is: " + content);
-				if(!compareToToday(date)) {
+				if(!compareToTheDate2(date, DAY_FROM_PRE) || compareToTheDate2(date, DAY_TO)) {//>= x > 
 					groupRubbish.add(house);
 					groupTempRemove.add(house);
 					AnalyseUtil.print("The house has been removed from list: " + house.getRequirementTitle());
+				}
+				
+				else if(excludeUsers.contains(house.getAuthorName())) {
+					groupRubbish.add(house);
+					groupTempRemove.add(house);
+					AnalyseUtil.print("The house has been removed from list: " + house.getRequirementTitle() + " user: " + house.getAuthorName());
+					
 				}
 			}
 			groupFinal.removeAll(groupTempRemove);
@@ -320,7 +360,7 @@ public class HTMLReader {
 	
 	//标题[<a href="https://www.douban.com/group/topic/120707892/">点这里</a>]
 	private List<String> buildResults(List<HouseRequirement> group) {
-		AnalyseUtil.print("Running the buildResults...: " + CURRENT_DATE);
+		AnalyseUtil.print("Running the buildResults...: " + YESTERDAY);
 		List<String> results = new ArrayList<String>();
 		for(HouseRequirement house : group) {
 			String result = "";

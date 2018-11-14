@@ -30,16 +30,28 @@ public class GroupReader {
 	private String mPreStartDate = null;
 	
 	
-	public GroupReader() {
-		initGroupLinksPre_Guangzhou();
-		setEndDate("08.05");//used for test here
-		setPreStartDate("08.01");
+	public GroupReader(String city) {
+		if(city.equals(AnalyseUtil.GUANGZHOU)) {
+			initGroupLinksPre_Guangzhou();
+		}else if(city.equals(AnalyseUtil.ZHUHAI)) {
+			initGroupLinksPre_Zhuhai();
+		}else if(city.equals(AnalyseUtil.FOSHAN)) {
+			initGroupLinksPre_Foshan();
+		}else {
+			initGroupLinksPre_Zhuhai();//default
+		}
+		
+		
+		setPreStartDate("10-23");//included
+		setEndDate("10-25");//not included
 	}
 	
 	public void run() {
 		parseEachGroup();
 		articleFilter();
+		putAllInOneGroup();
 		notPeriodDayFilter();
+		printHouseRabbishs();
 		printHouseResults();
 	}
 	
@@ -51,12 +63,11 @@ public class GroupReader {
 		mPreStartDate = preStartDate;
 	}
 	
-	//Initial the previous of group links without pageIndex, result is stored in mHouseGroupLinkPres
-	//Initial the List for house requirements for each group, result is stored in mGroupHouseRequires
-	//The mapping for mHouseGroupLinkPres and mGroupHouseRequires is 1:1
-	private void initGroupLinksPre_Guangzhou() {
+	//初始化每个小组的链接列表
+	private void initGroupLinksPre_Zhuhai() {
+		AnalyseUtil.print("[INFO] Start to initial the group pre links for zhuhai.");
 		mGroupIDs.clear();
-		mGroupIDs = getGuangzhouGroupIDs();
+		mGroupIDs = AnalyseUtil.getZhuhaiGroupIDs();
 		mHouseGroupLinkPres.clear();
 		for(String groupID : mGroupIDs) {
 			String groupLinkPre = LINK_COMMON_PREP + groupID + LINK_COMMON_END;
@@ -64,87 +75,98 @@ public class GroupReader {
 			List<HouseRequirement> houseRequiresInOneGroup = new ArrayList<HouseRequirement>();
 			mGroupHouseRequires.add(houseRequiresInOneGroup);
 		}
+		AnalyseUtil.print("[INFO] End to initial the group pre links for zhuhai.");
 	}
 	
-	//Add group IDs to the list.
-	private List<String> getGuangzhouGroupIDs() {
-		List<String> gzGroupIDs = new ArrayList<String>();
-		gzGroupIDs.add("gz020");//广州租房★（个人房源免费推广）
-		gzGroupIDs.add("tianhezufang");//广州天河租房（个人房源免费推广）
-		gzGroupIDs.add("gz_rent");//广州租房
-		gzGroupIDs.add("532699");//广州租房团
-		gzGroupIDs.add("haizhuzufang");//广州海珠租房（个人房源免费推广）
-		gzGroupIDs.add("yuexiuzufang");//广州越秀租房（个人房源免费推广）
-		gzGroupIDs.add("IloveGZ");//广州租房（好评度★★★★★）
-		gzGroupIDs.add("zunar_gz");//广州租房族（爱分享，易租房）
-		gzGroupIDs.add("zu.gz.soufun");//广州租房交友（原毕业生租房）
-		gzGroupIDs.add("549582");//广州租房
-		gzGroupIDs.add("panyuzufang");//广州番禺租房（个人房源免费推广）
-		gzGroupIDs.add("baiyunzufang");//广州白云租房（个人房源免费推广）
-		gzGroupIDs.add("gzzf");//广州合租-广州租个人房源
-		gzGroupIDs.add("liwanzufang");//广州荔湾租房（个人房源免费推广）
-		gzGroupIDs.add("huangpuzufang");//广州3号线+5号线+APM地铁沿线租房
-		gzGroupIDs.add("366393");//广州真房实客网租房组
-		gzGroupIDs.add("banjia");//广州合伙租房那些事
-		gzGroupIDs.add("558241");//广州公寓租房信息
-		gzGroupIDs.add("592739");//广州租房信息-推荐度★★★★★
-		gzGroupIDs.add("576562");//广州天河租房【无中介费】
-		gzGroupIDs.add("583602");//广州租房（房东直租，中介勿进）
-		gzGroupIDs.add("606682");//广州租房-男女不限(推荐★★★★★)
-		gzGroupIDs.add("575188");//广州租房大全【好评★★★★★】
-		gzGroupIDs.add("maquezufang");//【广州租房】无中介服务站-找朋友
-		gzGroupIDs.add("637254");//广州租房
-		return gzGroupIDs;
+	//Initial the previous of group links without pageIndex, result is stored in mHouseGroupLinkPres
+	//Initial the List for house requirements for each group, result is stored in mGroupHouseRequires
+	//The mapping for mHouseGroupLinkPres and mGroupHouseRequires is 1:1
+	private void initGroupLinksPre_Guangzhou() {
+		AnalyseUtil.print("[INFO] Start to initial the group pre links for guangzhou.");
+		mGroupIDs.clear();
+		mGroupIDs = AnalyseUtil.getGuangzhouGroupIDs();
+		mHouseGroupLinkPres.clear();
+		for(String groupID : mGroupIDs) {
+			String groupLinkPre = LINK_COMMON_PREP + groupID + LINK_COMMON_END;
+			mHouseGroupLinkPres.add(groupLinkPre);
+			List<HouseRequirement> houseRequiresInOneGroup = new ArrayList<HouseRequirement>();
+			mGroupHouseRequires.add(houseRequiresInOneGroup);
+		}
+		AnalyseUtil.print("[INFO] End to initial the group pre links for guangzhou.");
 	}
 
+	//初始化每个小组的链接列表
+	private void initGroupLinksPre_Foshan() {
+		AnalyseUtil.print("[INFO] Start to initial the group pre links for foshan.");
+		mGroupIDs.clear();
+		mGroupIDs = AnalyseUtil.getFoshanGroupIDs();
+		mHouseGroupLinkPres.clear();
+		for(String groupID : mGroupIDs) {
+			String groupLinkPre = LINK_COMMON_PREP + groupID + LINK_COMMON_END;
+			mHouseGroupLinkPres.add(groupLinkPre);
+			List<HouseRequirement> houseRequiresInOneGroup = new ArrayList<HouseRequirement>();
+			mGroupHouseRequires.add(houseRequiresInOneGroup);
+		}
+		AnalyseUtil.print("[INFO] End to initial the group pre links for foshan.");
+	}
+	
 	private void parseEachGroup() {
+		AnalyseUtil.print("[INFO] Start to parse each group.");
 		int groupCount = mHouseGroupLinkPres.size();
 		for(int i=0; i<groupCount; i++) {
-			AnalyseUtil.print("Filling the group: " + mGroupIDs.get(i));
+			AnalyseUtil.print("[INFO] Filling the group: " + mGroupIDs.get(i));
 
-			int index = 0;
+			int index = 0;//Page Index for each group
 			String groupLink_all;
 			mIsContinue = true;
 			
 			while (mIsContinue) {
 				groupLink_all = mHouseGroupLinkPres.get(i) + index;
-				AnalyseUtil.print("Now is parsing the link: " + groupLink_all);
+				AnalyseUtil.print("[INFO] Now is parsing the link: " + groupLink_all);
 				String content = AnalyseUtil.getURLContent(groupLink_all);
 				parseToList(content, i);
 
 				index += PAGE_INDEX_INCERASEMENT;//Next page.
 				//if(index > 50) isContinue = false;//only three pages: 0,25,50
 				try {
-					Thread.sleep(60000);//when the douban is requested 20 times in 1 minute, the IP will be blocked by douban.
+					Thread.sleep(40000);//when the douban is requested 20 times in 1 minute, the IP will be blocked by douban.
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
+		AnalyseUtil.print("[INFO] End to parse each group.");
 	}
 	
 	private void parseToList(String content, int groupIndex) {
+		AnalyseUtil.print("[INFO] Start to parse articles of the page.");
 
 		String[] articles;
 		try {
-			articles = AnalyseUtil.splitHTMLtoArticles(content);
+			articles = AnalyseUtil.splitHTMLtoArticles(content);//String
 			
 			for(String article : articles) {
-				AnalyseUtil.print("Split article: " + article);
+//				AnalyseUtil.print("[DEBUG] Split article: " + article);
 				if(!article.contains("<tr class=\"th\">")) {
-					HouseRequirement house = new HouseRequirement();
+					HouseRequirement house = new HouseRequirement();//String:artical parse to HouseRequirement:house
 					parseArticle(house, article);
-					mGroupHouseRequires.get(groupIndex).add(house);
+					if(mIsContinue) {
+						mGroupHouseRequires.get(groupIndex).add(house);
+					}else {
+						break;
+					}
 					
 				}
 			}
 		}catch(Exception e) {
-			AnalyseUtil.print("Exception happens in parseToList: \n" + e);
+			AnalyseUtil.print("[ERROR] Exception happens in parseToList: \n" + e);
 		}
+		AnalyseUtil.print("[INFO] End to parse articles of the page.");
 	}
 	
 	private void parseArticle(HouseRequirement house, String article) {
+		AnalyseUtil.print("[INFO] Start to parse articles to the object HouseRequirement.");
 		String authorName;
 		String requirementTitle;
 		String requirementLink;
@@ -153,7 +175,7 @@ public class GroupReader {
 		try {
 			String[] articleSplit = article.trim().split("</td>");
 			if(articleSplit.length != 4) {
-				AnalyseUtil.print("The split number for an article is wrong: " + articleSplit.length);
+				AnalyseUtil.print("[ERROR] The split number for an article is wrong: " + articleSplit.length);
 				return;
 			}
 			
@@ -161,9 +183,12 @@ public class GroupReader {
 			requirementTitle = articleSplit[0].substring(articleSplit[0].indexOf(" title=")+7,articleSplit[0].lastIndexOf(" class="));
 			authorName = articleSplit[1].substring(articleSplit[1].lastIndexOf("\">")+2, articleSplit[1].indexOf("</a>"));
 			replyNum = articleSplit[2].substring(articleSplit[2].lastIndexOf("\">")+2);
-			lastUpdateTime = articleSplit[3].substring(articleSplit[3].lastIndexOf("\">"));
+			lastUpdateTime = articleSplit[3].substring(articleSplit[3].lastIndexOf("\">")+2);
 			
-			isContinue(lastUpdateTime);
+			if(mIsContinue) {
+				isContinue(lastUpdateTime);
+				AnalyseUtil.print("[INFO] *Is continue is changed to be: " + mIsContinue + ", lastUpdateTime: " + lastUpdateTime + ", startTime: " + mPreStartDate);
+			}
 			
 			house.setAuthorName(authorName);
 			house.setRequirementLink(requirementLink);
@@ -171,25 +196,29 @@ public class GroupReader {
 			house.setReplyNum(replyNum);
 			house.setRequirementTitle(requirementTitle);
 		}catch(Exception e) {
-			AnalyseUtil.print("Exception happens in parseArticle: \n" + e);
+			AnalyseUtil.print("[ERROR] Exception happens in parseArticle for the article: \n" + article + "\n Error Message: \n" + e);
 		}
+		AnalyseUtil.print("[INFO] End to parse articles to the object HouseRequirement.");
 	}
 	
 	//To check when to finish the page reader.
 	private void isContinue(String str) {
-		mIsContinue = compareToEndday(str);
+		mIsContinue = compareToTheday(str, mPreStartDate);
 	}
 	
 	//compare to the previous day of the start day
-	private boolean compareToEndday(String str) {
+	private boolean compareToTheday(String str, String judgeDate) {
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
 		String currentDate = sdf.format(date);
-		if(mPreStartDate != null) {
-			currentDate = mPreStartDate;
+		if(judgeDate == null || judgeDate.trim().isEmpty()) {
+			judgeDate = currentDate;
 		}
 		
-		if(str.contains(currentDate)) {//once you meet the day, it will finish to loop.
+		/*if(str.contains(currentDate)) {//once you meet the day, it will finish to loop.
+			return true;
+		}*/
+		if(str.compareTo(judgeDate) > 0) {
 			return true;
 		}
 		return false;
@@ -203,79 +232,121 @@ public class GroupReader {
 	 * 3. the title with the word "已"
 	 */
 	private void articleFilter() {
+		AnalyseUtil.print("[INFO] Start to filter the houses for each group.");
 
-		AnalyseUtil.print("Running the articleFilter...");
+		//AnalyseUtil.print("Running the articleFilter...");
 		List<String> tempTitles = new ArrayList<String>();
+		List<String> tempUsers = new ArrayList<String>();
 
 		List<HouseRequirement> groupTemp = new ArrayList<HouseRequirement>();
-		for(int i=0; i<mGroupIDs.size(); i++) {
-			for(HouseRequirement house : mGroupHouseRequires.get(i)) {
-				if(tempTitles.contains(house.getRequirementTitle()) || house.getRequirementTitle().contains("求") || house.getRequirementTitle().contains("已")) {
+
+		List<String> excludeUsers = AnalyseUtil.excludeUsers_zhuhai();
+		
+		for(int i=0; i<mGroupIDs.size(); i++) {//each group
+			for(HouseRequirement house : mGroupHouseRequires.get(i)) {//each house of the group
+				if(tempTitles.contains(house.getRequirementTitle()) || 
+						house.getRequirementTitle().contains("求") || 
+						house.getRequirementTitle().contains("已") ||
+						 house.getRequirementTitle().contains("删")) {
 	
 					//groupMine.remove(house);
 					groupRubbish.add(house);//remove the items which title repeated, title contains "求", title contains "已"。
+					AnalyseUtil.print("[DEBUG] Title is repeated or contains 求，已，删: " + house.getRequirementTitle() + " | link: " + house.getRequirementLink());
+				}else if(tempUsers.contains(house.getAuthorName())){
+					AnalyseUtil.print("[DEBUG] User is repeated: " + house.getRequirementTitle() + " | user: " + house.getAuthorName() + " | link: " + house.getRequirementLink());//keep the latest update one
+					groupRubbish.add(house);
+				}else if(excludeUsers.contains(house.getAuthorName())){
+					AnalyseUtil.print("[DEBUG] User is in black list: " + house.getRequirementTitle() + " | user: " + house.getAuthorName() + " | link: " + house.getRequirementLink());//keep the latest update one
+					groupRubbish.add(house);
 				}else {
 					groupTemp.add(house);
 					tempTitles.add(house.getRequirementTitle());
+					tempUsers.add(house.getAuthorName());
 				}
 			}
 			mGroupHouseRequires.get(i).clear();
 			mGroupHouseRequires.get(i).addAll(groupTemp);
 			groupTemp.clear();
 		}
-		putAllInOneGroup();
+		AnalyseUtil.print("[INFO] End to filter the houses for each group.");
 	}
 	
 	private void putAllInOneGroup() {
+		AnalyseUtil.print("[INFO] Start to put all houses in one group.");
 		for(int i=0; i<mGroupIDs.size(); i++) {
 			groupFinal.addAll(mGroupHouseRequires.get(i));//TODO filter same user's article
 		}
+		AnalyseUtil.print("[INFO] End to put all houses in one group.");
 	}
 	
 
 	//filter the article that is not created by today
 	private void notPeriodDayFilter() {
-		AnalyseUtil.print("Running the notTodayFilter...");
-		try {
+		AnalyseUtil.print("[INFO] Start to remove the houses not in the sample period time.");
+		String content=null;
+		List<HouseRequirement> groupTempRemove = new ArrayList<HouseRequirement>();
+		for(HouseRequirement house : groupFinal) {
+			try {
 
-			List<HouseRequirement> groupTempRemove = new ArrayList<HouseRequirement>();
-			for(HouseRequirement house : groupFinal) {
-				String content = AnalyseUtil.getURLContent(house.getRequirementLink());
-				content = content.substring(content.indexOf("display:inline-block"), content.indexOf("link-report"));
-				String date = content.substring(content.indexOf(">")+1, content.indexOf("</span>"));
-				AnalyseUtil.print("The publish date for this article is: " + content);
-				if(AnalyseUtil.isBetweenPeriod(date, mPreStartDate, mEndDate)) {
-					groupRubbish.add(house);
-					groupTempRemove.add(house);
-					AnalyseUtil.print("The house has been removed from list: " + house.getRequirementTitle());
+				content = AnalyseUtil.getURLContent(house.getRequirementLink());
+				
+				if(!content.contains("你想要的东西不在这儿")) {//The link should be useful
+					String houseContent = content.substring(content.indexOf("id=\"link-report\""), content.indexOf("id=\"link-report_group\""));
+					if(!houseContent.contains(".jpg")) {
+						AnalyseUtil.print("[DEBUG] No picture for this house: " + house.getRequirementTitle() + " | link: " + house.getRequirementLink());
+						groupRubbish.add(house);
+						groupTempRemove.add(house);
+						continue;
+					}
+					content = content.substring(content.indexOf("display:inline-block"), content.indexOf("link-report"));
+					String date = content.substring(content.indexOf(">")+1, content.indexOf("</span>"));//house created date
+					//AnalyseUtil.print("The publish date for this article is: " + content);
+					AnalyseUtil.print("[DEBUG] The publish time for the house: " + house.getRequirementTitle() + " | link: " + house.getRequirementLink() + "current/start/end: " + date + "/" + mPreStartDate + "/" + mEndDate);
+					if(!AnalyseUtil.isBetweenPeriod(date, mPreStartDate, mEndDate)) {//TODO BUG: filter may remove the latest article?? maybe not a bug, because it is published before.
+						groupRubbish.add(house);
+						groupTempRemove.add(house);
+						AnalyseUtil.print("[DEBUG] The house has been removed from list: " + house.getRequirementTitle() + " | link: " + house.getRequirementLink());
+					}
 				}
+			}catch(Exception e) {
+				AnalyseUtil.print("Exception happens in notTodayFilter for the content: \n" + content + "\n Error Message: \n" + e);
+				
 			}
-			groupFinal.removeAll(groupTempRemove);
-		}catch(Exception e) {
-			AnalyseUtil.print("Exception happens in notTodayFilter: \n" + e);
-			
 		}
+		groupFinal.removeAll(groupTempRemove);
+		AnalyseUtil.print("[INFO] End to remove the houses not in the sample period time.");
 	}
 	
 	//标题[<a href="https://www.douban.com/group/topic/120707892/">点这里</a>]
 	private List<String> buildResults(List<HouseRequirement> group) {
-		AnalyseUtil.print("Running the buildResults...: from " + mPreStartDate + "(not include) to " + mEndDate + ", count is: " + group.size());
+		AnalyseUtil.print("[INFO] Start to build and format the results: from " + mPreStartDate + " to " + mEndDate + "(not include), count is: " + group.size());
 		List<String> results = new ArrayList<String>();
 		for(HouseRequirement house : group) {
 			String result = "";
 			result = "<p>" + house.getRequirementTitle() + "[<a href=\"" + house.getRequirementLink() + "\">点这里</a>]</p><br/>";
 			results.add(result);
 		}
+		AnalyseUtil.print("[INFO] End to build and format the results.");
 		return results;
 	}
 	
 
 	private void printHouseResults() {
+		AnalyseUtil.print("[INFO] Start to print the houses.");
 		List<String> results = buildResults(groupFinal);
 		for(String result : results) {
-
 			AnalyseUtil.print(result);
 		}
+		AnalyseUtil.print("[INFO] End to print the houses.");
+	}
+
+	private void printHouseRabbishs() {
+		AnalyseUtil.print("[INFO] Start to print the rubbishes.");
+		List<String> results = buildResults(groupRubbish);
+		for(String result : results) {
+			AnalyseUtil.print(result);
+		}
+		AnalyseUtil.print("[INFO] End to print the rubbishes.");
 	}
 	
 	
