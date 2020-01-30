@@ -28,6 +28,8 @@ public class GroupReader {
 	private boolean mIsContinue = true;
 	private String mEndDate = null;
 	private String mPreStartDate = null;
+	List<String> excludeUsers = new ArrayList<String>();
+	List<String> excludeUserLinks = new ArrayList<String>();
 	
 	
 	public GroupReader(String city) {
@@ -68,6 +70,10 @@ public class GroupReader {
 		AnalyseUtil.print("[INFO] Start to initial the group pre links for zhuhai.");
 		mGroupIDs.clear();
 		mGroupIDs = AnalyseUtil.getZhuhaiGroupIDs();
+		excludeUsers.clear();
+//		excludeUsers = AnalyseUtil.excludeUsers_zhuhai();
+		excludeUserLinks.clear();
+		excludeUserLinks = AnalyseUtil.excludeUserLinks_zhuhai();
 		mHouseGroupLinkPres.clear();
 		for(String groupID : mGroupIDs) {
 			String groupLinkPre = LINK_COMMON_PREP + groupID + LINK_COMMON_END;
@@ -85,6 +91,10 @@ public class GroupReader {
 		AnalyseUtil.print("[INFO] Start to initial the group pre links for guangzhou.");
 		mGroupIDs.clear();
 		mGroupIDs = AnalyseUtil.getGuangzhouGroupIDs();
+		excludeUsers.clear();
+//		excludeUsers = AnalyseUtil.excludeUsers_guangzhou();
+		excludeUserLinks.clear();
+		excludeUserLinks = AnalyseUtil.excludeUserLinks_guangzhou();
 		mHouseGroupLinkPres.clear();
 		for(String groupID : mGroupIDs) {
 			String groupLinkPre = LINK_COMMON_PREP + groupID + LINK_COMMON_END;
@@ -100,6 +110,8 @@ public class GroupReader {
 		AnalyseUtil.print("[INFO] Start to initial the group pre links for foshan.");
 		mGroupIDs.clear();
 		mGroupIDs = AnalyseUtil.getFoshanGroupIDs();
+		excludeUserLinks.clear();
+		excludeUserLinks = AnalyseUtil.excludeUserLinks_foshan();
 		mHouseGroupLinkPres.clear();
 		for(String groupID : mGroupIDs) {
 			String groupLinkPre = LINK_COMMON_PREP + groupID + LINK_COMMON_END;
@@ -168,6 +180,7 @@ public class GroupReader {
 	private void parseArticle(HouseRequirement house, String article) {
 		AnalyseUtil.print("[INFO] Start to parse articles to the object HouseRequirement.");
 		String authorName;
+		String authorLink;
 		String requirementTitle;
 		String requirementLink;
 		String lastUpdateTime;
@@ -182,6 +195,7 @@ public class GroupReader {
 			requirementLink = articleSplit[0].substring(articleSplit[0].indexOf("href=")+6,articleSplit[0].indexOf("/\"")+1);
 			requirementTitle = articleSplit[0].substring(articleSplit[0].indexOf(" title=")+7,articleSplit[0].lastIndexOf(" class="));
 			authorName = articleSplit[1].substring(articleSplit[1].lastIndexOf("\">")+2, articleSplit[1].indexOf("</a>"));
+			authorLink = articleSplit[1].substring(articleSplit[1].indexOf("href=")+6,articleSplit[1].indexOf("/\"")+1);
 			replyNum = articleSplit[2].substring(articleSplit[2].lastIndexOf("\">")+2);
 			lastUpdateTime = articleSplit[3].substring(articleSplit[3].lastIndexOf("\">")+2);
 			
@@ -191,6 +205,7 @@ public class GroupReader {
 			}
 			
 			house.setAuthorName(authorName);
+			house.setAuthorLink(authorLink);
 			house.setRequirementLink(requirementLink);
 			house.setLastUpdateTime(lastUpdateTime);
 			house.setReplyNum(replyNum);
@@ -203,6 +218,7 @@ public class GroupReader {
 	
 	//To check when to finish the page reader.
 	private void isContinue(String str) {
+		if(str.contains("01-01")) return;
 		mIsContinue = compareToTheday(str, mPreStartDate);
 	}
 	
@@ -218,7 +234,10 @@ public class GroupReader {
 		/*if(str.contains(currentDate)) {//once you meet the day, it will finish to loop.
 			return true;
 		}*/
-		if(str.compareTo(judgeDate) > 0) {
+		/*if(str.contains("01-01") || str.contains("01-02")) { return true;}*/
+//		String strTmp = (str.length() < 5) ? ("2019-"+str) : str;
+		String judgeDateTmp = (str.length() == 10) ? ("2019-"+judgeDate) : judgeDate;
+		if(str.compareTo(judgeDateTmp) > 0) {
 			return true;
 		}
 		return false;
@@ -239,8 +258,6 @@ public class GroupReader {
 		List<String> tempUsers = new ArrayList<String>();
 
 		List<HouseRequirement> groupTemp = new ArrayList<HouseRequirement>();
-
-		List<String> excludeUsers = AnalyseUtil.excludeUsers_zhuhai();
 		
 		for(int i=0; i<mGroupIDs.size(); i++) {//each group
 			for(HouseRequirement house : mGroupHouseRequires.get(i)) {//each house of the group
@@ -256,6 +273,9 @@ public class GroupReader {
 					AnalyseUtil.print("[DEBUG] User is repeated: " + house.getRequirementTitle() + " | user: " + house.getAuthorName() + " | link: " + house.getRequirementLink());//keep the latest update one
 					groupRubbish.add(house);
 				}else if(excludeUsers.contains(house.getAuthorName())){
+					AnalyseUtil.print("[DEBUG] User is in black list: " + house.getRequirementTitle() + " | user: " + house.getAuthorName() + " | link: " + house.getRequirementLink());//keep the latest update one
+					groupRubbish.add(house);
+				}else if(excludeUserLinks.contains(house.getAuthorLink())){
 					AnalyseUtil.print("[DEBUG] User is in black list: " + house.getRequirementTitle() + " | user: " + house.getAuthorName() + " | link: " + house.getRequirementLink());//keep the latest update one
 					groupRubbish.add(house);
 				}else {
@@ -300,6 +320,7 @@ public class GroupReader {
 					}
 					content = content.substring(content.indexOf("display:inline-block"), content.indexOf("link-report"));
 					String date = content.substring(content.indexOf(">")+1, content.indexOf("</span>"));//house created date
+					house.setPublishTime(date);
 					//AnalyseUtil.print("The publish date for this article is: " + content);
 					AnalyseUtil.print("[DEBUG] The publish time for the house: " + house.getRequirementTitle() + " | link: " + house.getRequirementLink() + "current/start/end: " + date + "/" + mPreStartDate + "/" + mEndDate);
 					if(!AnalyseUtil.isBetweenPeriod(date, mPreStartDate, mEndDate)) {//TODO BUG: filter may remove the latest article?? maybe not a bug, because it is published before.

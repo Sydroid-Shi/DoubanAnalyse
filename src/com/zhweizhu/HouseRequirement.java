@@ -3,10 +3,20 @@ package com.zhweizhu;
 public class HouseRequirement {
 
 	private String authorName;
+	private String authorLink;
 	private String requirementTitle;
 	private String requirementLink;
 	private String lastUpdateTime;
 	private String replyNum;
+	private String publishTime;
+
+	public String getPublishTime() {
+		return publishTime;
+	}
+
+	public void setPublishTime(String publishTime) {
+		this.publishTime = publishTime;
+	}
 
 	public String getAuthorName() {
 		return authorName;
@@ -46,6 +56,14 @@ public class HouseRequirement {
 
 	public void setReplyNum(String replyNum) {
 		this.replyNum = replyNum;
+	}
+
+	public String getAuthorLink() {
+		return authorLink;
+	}
+
+	public void setAuthorLink(String authorLink) {
+		this.authorLink = authorLink;
 	}
 
 }

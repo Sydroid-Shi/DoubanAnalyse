@@ -14,9 +14,9 @@ import java.util.List;
 import com.zhweizhu.DoubanGroup;
 
 public class AnalyseUtil {
-	public static String GUANGZHOU = "guangzhou";//¹ãÖİ
-	public static String ZHUHAI = "zhuhai";//Öéº£
-	public static String FOSHAN = "foshan";//·ğÉ½
+	public static String GUANGZHOU = "guangzhou";//å¹¿å·
+	public static String ZHUHAI = "zhuhai";//ç æµ·
+	public static String FOSHAN = "foshan";//ä½›å±±
 	
 	public static void print(String str) {
 		System.out.println(str);
@@ -72,7 +72,7 @@ public class AnalyseUtil {
 	
 	/**
 	 * To parse and get the page count for the Group Search URL.
-	 * @param htmlStr The HTML result from: "https://www.douban.com/group/search?start=0&cat=1019&sort=relevance&q=¹ãÖİ×â·¿"
+	 * @param htmlStr The HTML result from: "https://www.douban.com/group/search?start=0&cat=1019&sort=relevance&q=å¹¿å·ç§Ÿæˆ¿"
 	 * @return The page count for the Group Search URL
 	 */
 	public static int parseGroupSearchPageCount(String htmlStr) {
@@ -101,12 +101,12 @@ public class AnalyseUtil {
 		String cutPageEnd = "<span class=\"thispage\" data-total-page=";
 		String splitGroup = "<div class=\"result\">";
 		
-		String cutGroupLinkPre = "<a class=\"nbg\" href=";//<a class="nbg" href="https://www.douban.com/group/537239/" onclick="moreurl(this,{i: '19', query: '%E5%B9%BF%E5%B7%9E%E7%A7%9F%E6%88%BF', from: 'group_search', sid: 537239})" title="¹ãÖİÃâ·Ñ×â·¿´óºÏ¼¯"><img class
+		String cutGroupLinkPre = "<a class=\"nbg\" href=";//<a class="nbg" href="https://www.douban.com/group/537239/" onclick="moreurl(this,{i: '19', query: '%E5%B9%BF%E5%B7%9E%E7%A7%9F%E6%88%BF', from: 'group_search', sid: 537239})" title="å¹¿å·å…è´¹ç§Ÿæˆ¿å¤§åˆé›†"><img class
 		String cutGroupLinkEnd = "\" onclick=";
 		String cutGroupNamePre = "title=\"";
 		String cutGroupNameEnd = "\"><img";
-		String cutGroupCountPre = "<div class=\"info\">";//<div class="info">4739 ¸ö³ÉÔ± ÔÚ´Ë¾Û¼¯ </div>
-		String cutGroupCountEnd = " ¸ö";
+		String cutGroupCountPre = "<div class=\"info\">";//<div class="info">4739 ä¸ªæˆå‘˜ åœ¨æ­¤èšé›† </div>
+		String cutGroupCountEnd = " ä¸ª";
 		
 		List<DoubanGroup> doubanGroups = new ArrayList<DoubanGroup>();
 		
@@ -137,8 +137,8 @@ public class AnalyseUtil {
 	
 
 	public static boolean isBetweenPeriod(String currentDay, String preStartDay, String endDay) {
-		preStartDay = "2018-" + preStartDay;
-		endDay = "2018-" + endDay;
+		preStartDay = "2019-" + preStartDay;
+		endDay = "2019-" + endDay;
 		if(preStartDay == null || endDay == null) {
 			return false;
 		}
@@ -153,76 +153,199 @@ public class AnalyseUtil {
 		List<String> zhGroupIDs = new ArrayList<String>();
 
 		zhGroupIDs.add("zhuhai_zufang");//My group
-		zhGroupIDs.add("611595");//ÍÆ¼ö¶ÈÎå¿ÅĞÇ
-		zhGroupIDs.add("576424");//ÎŞÖĞ½é
-		zhGroupIDs.add("583425");//ÓæÅ®Í·Ïñ
-		zhGroupIDs.add("zhfangzi");//Öéº£·¿×Ó
-		zhGroupIDs.add("555279");//±»ÆÁ±Î
+		zhGroupIDs.add("611595");//æ¨èåº¦äº”é¢—æ˜Ÿ
+		zhGroupIDs.add("576424");//æ— ä¸­ä»‹
+		zhGroupIDs.add("583425");//æ¸”å¥³å¤´åƒ
+		zhGroupIDs.add("zhfangzi");//ç æµ·æˆ¿å­
+		zhGroupIDs.add("555279");//è¢«å±è”½
 		return zhGroupIDs;
 	}
 
 	public static List<String> excludeUsers_zhuhai(){
 		List<String> excludeUsers = new ArrayList<String>();
 		excludeUsers.add("sd8d78s");
-		excludeUsers.add("°¢ÀûÀÇ");
-		excludeUsers.add("³Â³Â³Â°¡");
-		excludeUsers.add("A     ıŞ");
+		excludeUsers.add("é˜¿åˆ©ç‹¼");
+		excludeUsers.add("é™ˆé™ˆé™ˆå•Š");
+		excludeUsers.add("A     î‘‡");
 		return excludeUsers;
+	}
+
+	public static List<String> excludeUserLinks_zhuhai(){
+		List<String> excludeUserLinks = new ArrayList<String>();
+		excludeUserLinks.add("https://www.douban.com/people/181519487/");//sd8d78s
+		excludeUserLinks.add("https://www.douban.com/people/179692762/");//é˜¿åˆ©ç‹¼
+		excludeUserLinks.add("https://www.douban.com/people/182512261/");//é™ˆé™ˆé™ˆå•Š
+		excludeUserLinks.add("https://www.douban.com/people/160200975/");//å±±ä»Š
+		excludeUserLinks.add("https://www.douban.com/people/180149790/");//å¾®ç¬‘é¢å¯¹æ¯ä¸€å¤©
+		excludeUserLinks.add("https://www.douban.com/people/182815921/");//è±†æ²¹17777
+		excludeUserLinks.add("https://www.douban.com/people/90747482/");//é€è—çš„é’Ÿ
+		excludeUserLinks.add("https://www.douban.com/people/185719145/");//è±†å‹185719145
+		excludeUserLinks.add("https://www.douban.com/people/186008364/");//è±†å‹186008364
+		excludeUserLinks.add("https://www.douban.com/people/63125840/");//Garyæ¦†
+		excludeUserLinks.add("https://www.douban.com/people/165087322/");//Apple
+		excludeUserLinks.add("https://www.douban.com/people/180254026/");//ä¸­å±±é’å¹´
+		excludeUserLinks.add("https://www.douban.com/people/187059234/");//è±†ç“£
+		excludeUserLinks.add("https://www.douban.com/people/182660432/");//13392976160
+		excludeUserLinks.add("https://www.douban.com/people/180856707/");//æ¡€
+		excludeUserLinks.add("https://www.douban.com/people/158624404/");//ä½ ä¸çŸ¥é“
+		excludeUserLinks.add("https://www.douban.com/people/158430595/");//é˜¿ä¸œandy
+		excludeUserLinks.add("https://www.douban.com/people/188786662/");//18319656618
+		excludeUserLinks.add("https://www.douban.com/people/180176140/");//å˜‰ä¿Šä»”â€¦â€¦
+		excludeUserLinks.add("https://www.douban.com/people/188325010/");//ä¸‡ä¸€
+		excludeUserLinks.add("https://www.douban.com/people/189488401/");//è€å¤å¤©32928
+		excludeUserLinks.add("https://www.douban.com/people/189559315/");//æ—©é¤åƒé¢åŒ…
+		excludeUserLinks.add("https://www.douban.com/people/128141198/");//ç™½æ ‘æ ‘
+		excludeUserLinks.add("https://www.douban.com/people/119302132/");//è‹¥æ˜¯ä¸€æ£µæ ‘
+		excludeUserLinks.add("https://www.douban.com/people/yjcc-1020/");//é›¾éœ­
+		excludeUserLinks.add("https://www.douban.com/people/163706051/");//å“¦ï¼
+		excludeUserLinks.add("https://www.douban.com/people/187739754/");//JAson__LEung
+		excludeUserLinks.add("https://www.douban.com/people/192359543/");//å°çº¿æ¡ï¼ˆç æµ·ä¸æ±‚äººï¼‰
+		excludeUserLinks.add("https://www.douban.com/people/s7enn/");//s7enn
+		excludeUserLinks.add("https://www.douban.com/people/194000963/");//Jassy
+		excludeUserLinks.add("https://www.douban.com/people/193238048/");//å¥‹æ–—çš„80å2676
+		excludeUserLinks.add("https://www.douban.com/people/zhaodp/");//é€¼å¹³
+		excludeUserLinks.add("https://www.douban.com/people/192401645/");//å°ç™½
+		excludeUserLinks.add("https://www.douban.com/people/192646945/");//åˆ˜ä¼Ÿä¸œ1
+		excludeUserLinks.add("https://www.douban.com/people/195495422/");//é™ˆæ¬£äºˆ
+		excludeUserLinks.add("https://www.douban.com/people/175266351/");//å†²æµªå°‘å¥³ï¼ˆç æµ·ç§Ÿæˆ¿ç¾¤ï¼‰
+		excludeUserLinks.add("https://www.douban.com/people/195867839/");//åˆ˜ä¼Ÿä¸œ1
+		excludeUserLinks.add("https://www.douban.com/people/196158916/");//é¢ è¦†
+		excludeUserLinks.add("https://www.douban.com/people/195611042/");//é˜¿é”‹å‘€
+		excludeUserLinks.add("https://www.douban.com/people/196950290/");//è±†å‹196950290
+		excludeUserLinks.add("https://www.douban.com/people/164799891/");//ggyy
+		excludeUserLinks.add("https://www.douban.com/people/91654130/");//è´å¥‡èŠ½èœ
+		excludeUserLinks.add("https://www.douban.com/people/196905099/");//å°è˜
+		excludeUserLinks.add("https://www.douban.com/people/su-dong/");//æ¡‘å¾·å…ˆç”Ÿ
+		excludeUserLinks.add("https://www.douban.com/people/130375078/");//ä¹è§‚å‘ä¸Šçš„å¤§å–µ
+		excludeUserLinks.add("https://www.douban.com/people/192951553/");//è½ å¶ 
+		excludeUserLinks.add("https://www.douban.com/people/197796330/");//çˆ±è±†
+		excludeUserLinks.add("https://www.douban.com/people/198152671/");//ç‚¹ç‚¹
+		excludeUserLinks.add("https://www.douban.com/people/197367513/");//é›ªå„¿
+		excludeUserLinks.add("https://www.douban.com/people/198134827/");//æ™“å½¤
+		excludeUserLinks.add("https://www.douban.com/people/196049292/");//ç æµ·Qæˆ¿ç½‘
+		excludeUserLinks.add("https://www.douban.com/people/197537007/");//K
+		excludeUserLinks.add("https://www.douban.com/people/197831844/");//å¼€å¿ƒ
+		excludeUserLinks.add("https://www.douban.com/people/196634605/");//~å©·å©·
+		excludeUserLinks.add("https://www.douban.com/people/200321845/");//é²ç½—éœè°¢
+		excludeUserLinks.add("https://www.douban.com/people/202492934/");//AğŸ’‹å¤§ç™½
+		excludeUserLinks.add("https://www.douban.com/people/177829458/");//å
+		excludeUserLinks.add("https://www.douban.com/people/203611584/");//è³ˆ
+		excludeUserLinks.add("https://www.douban.com/people/199075100/");//ğŸ€
+		excludeUserLinks.add("https://www.douban.com/people/204630105/");//ç æµ·æ¨ªç´æˆ¿äº§
+		excludeUserLinks.add("https://www.douban.com/people/202965289/");//å•è”¡å”ä½™
+		excludeUserLinks.add("https://www.douban.com/people/201914476/");//A å°æ‹›
+		excludeUserLinks.add("https://www.douban.com/people/106171983/");//å‘é£™çš„æ•£å…‰å°‘å¥³
+		excludeUserLinks.add("https://www.douban.com/people/200410628/");//èŒ‰è‰èœœèŒ¶
+		excludeUserLinks.add("https://www.douban.com/people/194639267/");//å“­å“­é¸­
+		return excludeUserLinks;
+	}
+	
+	public static List<String> excludeUserLinks_guangzhou(){
+		List<String> excludeUserLinks = new ArrayList<String>();
+		excludeUserLinks.add("https://www.douban.com/people/183469060/");
+		excludeUserLinks.add("https://www.douban.com/people/182820901/");
+		excludeUserLinks.add("https://www.douban.com/people/181328964/");
+		excludeUserLinks.add("https://www.douban.com/people/179320742/");
+		excludeUserLinks.add("https://www.douban.com/people/153003345/");
+		excludeUserLinks.add("https://www.douban.com/people/168863639/");
+		excludeUserLinks.add("https://www.douban.com/people/177997871/");
+		excludeUserLinks.add("https://www.douban.com/people/176981314/");
+		excludeUserLinks.add("https://www.douban.com/people/72798565/");
+		excludeUserLinks.add("https://www.douban.com/people/158563024/");
+		excludeUserLinks.add("https://www.douban.com/people/162993850/");
+		excludeUserLinks.add("https://www.douban.com/people/158565886/");
+		excludeUserLinks.add("https://www.douban.com/people/183206281/");
+		return excludeUserLinks;
+	}
+	
+	public static List<String> excludeUserLinks_foshan(){
+		List<String> excludeUserLinks = new ArrayList<String>();
+		excludeUserLinks.add("https://www.douban.com/people/171042688/");//èŒƒ
+		excludeUserLinks.add("https://www.douban.com/people/186805216/");//è´¦å·åœç”¨
+		excludeUserLinks.add("https://www.douban.com/people/186806038/");//è´¦å·åœç”¨
+		excludeUserLinks.add("https://www.douban.com/people/186039398/");//è±†å‹186039398
+		excludeUserLinks.add("https://www.douban.com/people/169101315/");//è´¦å·åœç”¨
+		excludeUserLinks.add("https://www.douban.com/people/186246727/");//è€é™ˆå…ˆç”Ÿ
+		excludeUserLinks.add("https://www.douban.com/people/186397424/");//éšå¯“é’å¹´ç¤¾åŒº
+		excludeUserLinks.add("https://www.douban.com/people/159688293/");//å²æœˆå¦‚æ­Œ
+		excludeUserLinks.add("https://www.douban.com/people/158147887/");//mark
+		excludeUserLinks.add("https://www.douban.com/people/164404648/");//ä¸€é‰ç±³
+		excludeUserLinks.add("https://www.douban.com/people/185002615/");//æ¯…ç”Ÿ
+		excludeUserLinks.add("https://www.douban.com/people/185010693/");//YOU+ä½›å±±Uå¦¹
+		excludeUserLinks.add("https://www.douban.com/people/arttoone/");//åŒ—æå–µ
+		excludeUserLinks.add("https://www.douban.com/people/184690070/");//ææ‹‰ç±³è‹
+		excludeUserLinks.add("https://www.douban.com/people/184698049/");//åŸƒæ‹‰äºš
+		excludeUserLinks.add("https://www.douban.com/people/183503241/");//æ¢¦æƒ³å®¶
+		excludeUserLinks.add("https://www.douban.com/people/186165682/");//å°ä¹ä¹
+		excludeUserLinks.add("https://www.douban.com/people/185088667/");//è¯º
+		excludeUserLinks.add("https://www.douban.com/people/169385966/");//åŒ¯å’Œå…¬å¯“
+		excludeUserLinks.add("https://www.douban.com/people/185566517/");//æ²³ç•”é›…è‹‘
+		excludeUserLinks.add("https://www.douban.com/people/179020511/");//è´¦å·åœç”¨
+		excludeUserLinks.add("https://www.douban.com/people/176662326/");//å‘¨åšå£®
+		excludeUserLinks.add("https://www.douban.com/people/185647475/");//çˆ±åŠ å…¬å¯“
+		excludeUserLinks.add("https://www.douban.com/people/179886484/");//æˆå­
+		excludeUserLinks.add("https://www.douban.com/people/179275030/");//liya
+		excludeUserLinks.add("https://www.douban.com/people/146683592/");//Lã€‚Sã€‚Hã€‚
+		excludeUserLinks.add("https://www.douban.com/people/159211636/");//å˜‰å·ç”µæ¢¯å…¬é¦†
+		excludeUserLinks.add("https://www.douban.com/people/185305002/");//å¦‚æ­¤å®‰å¥½
+		excludeUserLinks.add("https://www.douban.com/people/43592487/");//Sharonx
+		excludeUserLinks.add("https://www.douban.com/people/185517348/");//è±†
+		return excludeUserLinks;
 	}
 	
 	//Add group IDs to the list.
 	public static List<String> getGuangzhouGroupIDs() {
 		List<String> gzGroupIDs = new ArrayList<String>();
-		//gzGroupIDs.add("gz020");//¹ãÖİ×â·¿¡ï£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		//gzGroupIDs.add("tianhezufang");//¹ãÖİÌìºÓ×â·¿£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		gzGroupIDs.add("gz_rent");//¹ãÖİ×â·¿
-		/*gzGroupIDs.add("532699");//¹ãÖİ×â·¿ÍÅ
-		//gzGroupIDs.add("haizhuzufang");//¹ãÖİº£Öé×â·¿£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		//gzGroupIDs.add("yuexiuzufang");//¹ãÖİÔ½Ğã×â·¿£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		gzGroupIDs.add("IloveGZ");//¹ãÖİ×â·¿£¨ºÃÆÀ¶È¡ï¡ï¡ï¡ï¡ï£©
-		gzGroupIDs.add("zunar_gz");//¹ãÖİ×â·¿×å£¨°®·ÖÏí£¬Ò××â·¿£©
-		gzGroupIDs.add("zu.gz.soufun");//¹ãÖİ×â·¿½»ÓÑ£¨Ô­±ÏÒµÉú×â·¿£©
-		gzGroupIDs.add("549582");//¹ãÖİ×â·¿
-		//gzGroupIDs.add("panyuzufang");//¹ãÖİ·¬Ø®×â·¿£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		//gzGroupIDs.add("baiyunzufang");//¹ãÖİ°×ÔÆ×â·¿£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		gzGroupIDs.add("gzzf");//¹ãÖİºÏ×â-¹ãÖİ×â¸öÈË·¿Ô´
-		//gzGroupIDs.add("liwanzufang");//¹ãÖİÀóÍå×â·¿£¨¸öÈË·¿Ô´Ãâ·ÑÍÆ¹ã£©
-		gzGroupIDs.add("huangpuzufang");//¹ãÖİ3ºÅÏß+5ºÅÏß+APMµØÌúÑØÏß×â·¿
-		gzGroupIDs.add("366393");//¹ãÖİÕæ·¿Êµ¿ÍÍø×â·¿×é
-		gzGroupIDs.add("banjia");//¹ãÖİºÏ»ï×â·¿ÄÇĞ©ÊÂ
-		gzGroupIDs.add("558241");//¹ãÖİ¹«Ô¢×â·¿ĞÅÏ¢
-		gzGroupIDs.add("592739");//¹ãÖİ×â·¿ĞÅÏ¢-ÍÆ¼ö¶È¡ï¡ï¡ï¡ï¡ï
-		gzGroupIDs.add("576562");//¹ãÖİÌìºÓ×â·¿¡¾ÎŞÖĞ½é·Ñ¡¿
-		gzGroupIDs.add("583602");//¹ãÖİ×â·¿£¨·¿¶«Ö±×â£¬ÖĞ½éÎğ½ø£©
-		gzGroupIDs.add("606682");//¹ãÖİ×â·¿-ÄĞÅ®²»ÏŞ(ÍÆ¼ö¡ï¡ï¡ï¡ï¡ï)
-		gzGroupIDs.add("575188");//¹ãÖİ×â·¿´óÈ«¡¾ºÃÆÀ¡ï¡ï¡ï¡ï¡ï¡¿
-		gzGroupIDs.add("maquezufang");//¡¾¹ãÖİ×â·¿¡¿ÎŞÖĞ½é·şÎñÕ¾-ÕÒÅóÓÑ
-		gzGroupIDs.add("637254");//¹ãÖİ×â·¿
+		//gzGroupIDs.add("gz020");//å¹¿å·ç§Ÿæˆ¿â˜…ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		//gzGroupIDs.add("tianhezufang");//å¹¿å·å¤©æ²³ç§Ÿæˆ¿ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		gzGroupIDs.add("gz_rent");//å¹¿å·ç§Ÿæˆ¿
+		/*gzGroupIDs.add("532699");//å¹¿å·ç§Ÿæˆ¿å›¢
+		//gzGroupIDs.add("haizhuzufang");//å¹¿å·æµ·ç ç§Ÿæˆ¿ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		//gzGroupIDs.add("yuexiuzufang");//å¹¿å·è¶Šç§€ç§Ÿæˆ¿ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		gzGroupIDs.add("IloveGZ");//å¹¿å·ç§Ÿæˆ¿ï¼ˆå¥½è¯„åº¦â˜…â˜…â˜…â˜…â˜…ï¼‰
+		gzGroupIDs.add("zunar_gz");//å¹¿å·ç§Ÿæˆ¿æ—ï¼ˆçˆ±åˆ†äº«ï¼Œæ˜“ç§Ÿæˆ¿ï¼‰
+		gzGroupIDs.add("zu.gz.soufun");//å¹¿å·ç§Ÿæˆ¿äº¤å‹ï¼ˆåŸæ¯•ä¸šç”Ÿç§Ÿæˆ¿ï¼‰
+		gzGroupIDs.add("549582");//å¹¿å·ç§Ÿæˆ¿
+		//gzGroupIDs.add("panyuzufang");//å¹¿å·ç•ªç¦ºç§Ÿæˆ¿ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		//gzGroupIDs.add("baiyunzufang");//å¹¿å·ç™½äº‘ç§Ÿæˆ¿ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		gzGroupIDs.add("gzzf");//å¹¿å·åˆç§Ÿ-å¹¿å·ç§Ÿä¸ªäººæˆ¿æº
+		//gzGroupIDs.add("liwanzufang");//å¹¿å·è”æ¹¾ç§Ÿæˆ¿ï¼ˆä¸ªäººæˆ¿æºå…è´¹æ¨å¹¿ï¼‰
+		gzGroupIDs.add("huangpuzufang");//å¹¿å·3å·çº¿+5å·çº¿+APMåœ°é“æ²¿çº¿ç§Ÿæˆ¿
+		gzGroupIDs.add("366393");//å¹¿å·çœŸæˆ¿å®å®¢ç½‘ç§Ÿæˆ¿ç»„
+		gzGroupIDs.add("banjia");//å¹¿å·åˆä¼™ç§Ÿæˆ¿é‚£äº›äº‹
+		gzGroupIDs.add("558241");//å¹¿å·å…¬å¯“ç§Ÿæˆ¿ä¿¡æ¯
+		gzGroupIDs.add("592739");//å¹¿å·ç§Ÿæˆ¿ä¿¡æ¯-æ¨èåº¦â˜…â˜…â˜…â˜…â˜…
+		gzGroupIDs.add("576562");//å¹¿å·å¤©æ²³ç§Ÿæˆ¿ã€æ— ä¸­ä»‹è´¹ã€‘
+		gzGroupIDs.add("583602");//å¹¿å·ç§Ÿæˆ¿ï¼ˆæˆ¿ä¸œç›´ç§Ÿï¼Œä¸­ä»‹å‹¿è¿›ï¼‰
+		gzGroupIDs.add("606682");//å¹¿å·ç§Ÿæˆ¿-ç”·å¥³ä¸é™(æ¨èâ˜…â˜…â˜…â˜…â˜…)
+		gzGroupIDs.add("575188");//å¹¿å·ç§Ÿæˆ¿å¤§å…¨ã€å¥½è¯„â˜…â˜…â˜…â˜…â˜…ã€‘
+		gzGroupIDs.add("maquezufang");//ã€å¹¿å·ç§Ÿæˆ¿ã€‘æ— ä¸­ä»‹æœåŠ¡ç«™-æ‰¾æœ‹å‹
+		gzGroupIDs.add("637254");//å¹¿å·ç§Ÿæˆ¿
 */		return gzGroupIDs;
 	}
 
 	public static List<String> getFoshanGroupIDs() {
 		List<String> fsGroupIDs = new ArrayList<String>();
 
-		fsGroupIDs.add("503571");//·ğÉ½×â·¿£¨ÍÆ¼ö¶È¡ï¡ï¡ï¡ï¡ï£©
-		fsGroupIDs.add("514329");//·ğÉ½ÈËĞ¡×é£º¡¾×â·¿°æ¡¿
-		fsGroupIDs.add("fszf");//·ğÉ½ºÏ×â - ·ğÉ½×â¸öÈË·¿Ô´
-		fsGroupIDs.add("536016");//·ğÉ½×â·¿×å
-		fsGroupIDs.add("551824");//·ğÉ½×â·¿
+		fsGroupIDs.add("503571");//ä½›å±±ç§Ÿæˆ¿ï¼ˆæ¨èåº¦â˜…â˜…â˜…â˜…â˜…ï¼‰
+		fsGroupIDs.add("514329");//ä½›å±±äººå°ç»„ï¼šã€ç§Ÿæˆ¿ç‰ˆã€‘
+		fsGroupIDs.add("fszf");//ä½›å±±åˆç§Ÿ - ä½›å±±ç§Ÿä¸ªäººæˆ¿æº
+		fsGroupIDs.add("536016");//ä½›å±±ç§Ÿæˆ¿æ—
+		fsGroupIDs.add("551824");//ä½›å±±ç§Ÿæˆ¿
 		return fsGroupIDs;
 	}
 
 	public static void writeToFile(String str) {
 		try {
-            File logFile = new File("D:\\result\\output-foshan-1001-1026.txt"); // Ïà¶ÔÂ·¾¶£¬Èç¹ûÃ»ÓĞÔòÒª½¨Á¢Ò»¸öĞÂµÄoutput¡£txtÎÄ¼ş 
+            File logFile = new File("D:\\result\\output-zhuhai-1221-1231.txt"); // ç›¸å¯¹è·¯å¾„ï¼Œå¦‚æœæ²¡æœ‰åˆ™è¦å»ºç«‹ä¸€ä¸ªæ–°çš„outputã€‚txtæ–‡ä»¶ 
             if(!logFile.exists()) {
-            	logFile.createNewFile(); // ´´½¨ĞÂÎÄ¼ş  
+            	logFile.createNewFile(); // åˆ›å»ºæ–°æ–‡ä»¶  
             }
             //BufferedWriter out = new BufferedWriter(new FileWriter(logFile));  
             FileWriter out = new FileWriter(logFile, true);
-            out.write(str + "\r\n"); // \r\n¼´Îª»»ĞĞ  
-            //out.flush(); // °Ñ»º´æÇøÄÚÈİÑ¹ÈëÎÄ¼ş
-            out.close(); // ×îºó¼ÇµÃ¹Ø±ÕÎÄ¼ş  
+            out.write(str + "\r\n"); // \r\nå³ä¸ºæ¢è¡Œ  
+            //out.flush(); // æŠŠç¼“å­˜åŒºå†…å®¹å‹å…¥æ–‡ä»¶
+            out.close(); // æœ€åè®°å¾—å…³é—­æ–‡ä»¶  
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

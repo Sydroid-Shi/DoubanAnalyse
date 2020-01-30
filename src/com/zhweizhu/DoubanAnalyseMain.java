@@ -14,10 +14,10 @@ public class DoubanAnalyseMain {
 		//gsReader.run();
 		
 //		GroupReader groupReader = new GroupReader(AnalyseUtil.GUANGZHOU);//AnalyseUtil.ZHUHAI
-//		GroupReader groupReader = new GroupReader(AnalyseUtil.ZHUHAI);
-		GroupReader groupReader = new GroupReader(AnalyseUtil.FOSHAN);
-		groupReader.setPreStartDate("10-01");//included,MM-dd
-		groupReader.setEndDate("10-26");//no included,MM-dd
+		GroupReader groupReader = new GroupReader(AnalyseUtil.ZHUHAI);
+//		GroupReader groupReader = new GroupReader(AnalyseUtil.FOSHAN);
+		groupReader.setPreStartDate("12-21");//included,MM-dd
+		groupReader.setEndDate("12-31");//no included,MM-dd
 		groupReader.run();//remember to set the file location in AnalyseUtil.writeToFile
 		
 		//test
